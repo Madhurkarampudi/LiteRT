@@ -26,8 +26,16 @@ jobs:
         with:
           ndk-version: r25c # Specify the NDK version expected by TF/your project
 
-      - name: Setup Bazel
-        uses: bazelbuild/setup-bazel@v2
+      - name: Install Bazelisk (as Bazel)
+        run: |
+          BAZELISK_VERSION="v1.19.0" # Or check for the latest version
+          DOWNLOAD_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64"
+          mkdir -p "$HOME/bin"
+          wget -qO "$HOME/bin/bazel" "${DOWNLOAD_URL}"
+          chmod +x "$HOME/bin/bazel"
+          echo "$HOME/bin" >> $GITHUB_PATH
+          echo "Bazel version (from Bazelisk):"
+          bazel version
 
       - name: Build with Bazel
         run: |
