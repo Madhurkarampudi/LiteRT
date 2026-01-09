@@ -1,0 +1,36 @@
+name: Build LiteRT for Android x86_64
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-android-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Required for Android toolchain
+
+      - name: Set up Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r25c # Specify the NDK version expected by TF/your project
+
+      # Setup Bazel. This will use the version specified in your project's .bazelversion file.
+      - name: Setup Bazel
+        uses: bazelbuild/setup-bazel@v2
+
+      - name: Build with Bazel
+        run: |
+          bazel build --config=android_x86_64 //litert/litert/vendors/intel_openvino/...
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
