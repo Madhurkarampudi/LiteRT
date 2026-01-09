@@ -2,9 +2,11 @@ name: Build LiteRT for Android x86_64
 
 on:
   push:
-    branches: [ main ]
+    tags:
+    - v*.*.*
   pull_request:
-    branches: [ main ]
+    branches:
+    - main
 
 jobs:
   build-android-x86_64:
