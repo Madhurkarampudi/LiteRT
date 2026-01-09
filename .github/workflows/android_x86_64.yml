@@ -39,6 +39,6 @@ jobs:
 
       - name: Build with Bazel
         run: |
-          bazel build --config=android_x86_64 //litert/litert/vendors/intel_openvino/...
+          bazel build --config=android_x86_64 //litert/third_party/intel_openvino/...
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
