@@ -26,7 +26,6 @@ jobs:
         with:
           ndk-version: r25c # Specify the NDK version expected by TF/your project
 
-      # Setup Bazel. This will use the version specified in your project's .bazelversion file.
       - name: Setup Bazel
         uses: bazelbuild/setup-bazel@v2
 
