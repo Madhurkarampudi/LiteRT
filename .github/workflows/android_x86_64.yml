@@ -1,5 +1,4 @@
 name: Build LiteRT for Android x86_64
-
 on:
   push:
     tags:
