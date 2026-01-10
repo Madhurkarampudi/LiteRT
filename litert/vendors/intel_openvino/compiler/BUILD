@@ -38,6 +38,13 @@ litert_dynamic_lib(
     }),
     export_litert_only = True,
     features = ["-use_header_modules"],  # Incompatible with -fexceptions.
+    linkopts = select({
+        "@org_tensorflow//tensorflow:android_x86_64": ["-Wl,-soname=libLiteRtCompilerPlugin_IntelOpenvino.so"],
+        "@org_tensorflow//tensorflow:android_arm64": ["-Wl,-soname=libLiteRtCompilerPlugin_IntelOpenvino.so"],
+        "@org_tensorflow//tensorflow:linux_x86_64": ["-Wl,-soname=libLiteRtCompilerPlugin_IntelOpenvino.so"],
+        "@platforms//os:macos": ["-Wl,-install_name,@rpath/libLiteRtCompilerPlugin_IntelOpenvino.so"],
+        "//conditions:default": ["-Wl,-soname=libLiteRtCompilerPlugin_IntelOpenvino.so"],
+    }),
     shared_lib_name = "intel_openvino_compiler_plugin_so",
     so_name = "libLiteRtCompilerPlugin_IntelOpenvino.so",
     ungrte = True,
