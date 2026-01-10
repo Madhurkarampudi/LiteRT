@@ -93,9 +93,17 @@ selects.config_setting_group(
 )
 
 selects.config_setting_group(
-    name = "mtk_sdk_v8_android",
+    name = "mtk_sdk_v8_android_x86_64",
     match_all = [
-        "@org_tensorflow//tensorflow:android",
+        "@org_tensorflow//tensorflow:android_x86_64",
+        ":mtk_sdk_v8",
+    ],
+)
+
+selects.config_setting_group(
+    name = "mtk_sdk_v8_android_arm64",
+    match_all = [
+        "@org_tensorflow//tensorflow:android_arm64",
         ":mtk_sdk_v8",
     ],
 )
