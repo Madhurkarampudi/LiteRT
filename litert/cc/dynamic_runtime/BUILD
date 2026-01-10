@@ -473,7 +473,11 @@ cc_test(
         "@com_google_googletest//:gtest_main",
         "@opencl_headers",
     ] + select({
-        "@org_tensorflow//tensorflow:android": [
+        "@org_tensorflow//tensorflow:android_x86_64": [
+            "//tflite/delegates/gpu/cl:gl_interop",
+            "//tflite/delegates/gpu/gl:egl_environment",
+        ],
+        "@org_tensorflow//tensorflow:android_arm64": [
             "//tflite/delegates/gpu/cl:gl_interop",
             "//tflite/delegates/gpu/gl:egl_environment",
         ],
@@ -544,7 +548,8 @@ cc_test(
     name = "litert_environment_test",
     srcs = ["//litert/cc:litert_environment_test.cc"],
     linkopts = select({
-        "@org_tensorflow//tensorflow:android": ["-llog"],
+        "@org_tensorflow//tensorflow:android_x86_64": ["-llog"],
+        "@org_tensorflow//tensorflow:android_arm64": ["-llog"],
         "//conditions:default": [],
     }),
     deps = [
@@ -660,15 +665,21 @@ cc_test(
 #         "//litert/test:matchers",
 #         "//litert/test:simple_model",
 #         "@opencl_headers",
-#     ] + select({
-#         "@org_tensorflow//tensorflow:android": [
-#             "//tflite/delegates/gpu/cl:cl_device",
-#             "//tflite/delegates/gpu/cl:gl_interop",
-#             "//tflite/delegates/gpu/cl:opencl_wrapper",
-#             "//tflite/delegates/gpu/gl:egl_environment",
-#         ],
-#         "//conditions:default": [],
-#     }),
+    ] + select({
+        "@org_tensorflow//tensorflow:android_x86_64": [
+            "//tflite/delegates/gpu/cl:cl_device",
+            "//tflite/delegates/gpu/cl:gl_interop",
+            "//tflite/delegates/gpu/cl:opencl_wrapper",
+            "//tflite/delegates/gpu/gl:egl_environment",
+        ],
+        "@org_tensorflow//tensorflow:android_arm64": [
+            "//tflite/delegates/gpu/cl:cl_device",
+            "//tflite/delegates/gpu/cl:gl_interop",
+            "//tflite/delegates/gpu/cl:opencl_wrapper",
+            "//tflite/delegates/gpu/gl:egl_environment",
+        ],
+        "//conditions:default": [],
+    }),
 # )
 #
 # copybara:uncomment_end

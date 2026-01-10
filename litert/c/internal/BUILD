@@ -235,7 +235,8 @@ cc_library(
     srcs = ["litert_logging.cc"],
     hdrs = ["litert_logging.h"],
     linkopts = select({
-        "@org_tensorflow//tensorflow:android": ["-llog"],
+        "@org_tensorflow//tensorflow:android_x86_64": ["-llog"],
+        "@org_tensorflow//tensorflow:android_arm64": ["-llog"],
         "//conditions:default": [],
     }),
     visibility = [
