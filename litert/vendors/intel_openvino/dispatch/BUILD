@@ -53,7 +53,10 @@ litert_dynamic_lib(
     export_litert_only = True,
     features = ["-use_header_modules"],  # Incompatible with -fexceptions.
     linkopts = litert_android_linkopts() + select({
-        "@org_tensorflow//tensorflow:android": [
+        "@org_tensorflow//tensorflow:android_x86_64": [
+            "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
+        ],
+        "@org_tensorflow//tensorflow:android_arm64": [
             "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
         ],
         "@org_tensorflow//tensorflow:linux_x86_64": [
