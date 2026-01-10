@@ -1331,7 +1331,8 @@ cc_library(
     compatible_with = get_compatible_with_portable(),
     copts = tflite_copts_warnings() + tflite_copts(),
     linkopts = select({
-        "@org_tensorflow//tensorflow:android": ["-llog"],
+        "@org_tensorflow//tensorflow:android_x86_64": ["-llog"],
+        "@org_tensorflow//tensorflow:android_arm64": ["-llog"],
         "//conditions:default": [],
     }),
     visibility = internal_visibility_allowlist(),
@@ -1413,6 +1414,12 @@ tflite_cc_shared_object(
             "-Wl,-exported_symbols_list,$(location //tflite:tflite_exported_symbols.lds)",
         ],
         "@org_tensorflow//tensorflow:windows": [],
+        "@org_tensorflow//tensorflow:android_x86_64": [
+            "-Wl,--version-script,$(location //tflite:tflite_version_script.lds)",
+        ],
+        "@org_tensorflow//tensorflow:android_arm64": [
+            "-Wl,--version-script,$(location //tflite:tflite_version_script.lds)",
+        ],
         "//conditions:default": [
             "-Wl,--version-script,$(location //tflite:tflite_version_script.lds)",
         ],
