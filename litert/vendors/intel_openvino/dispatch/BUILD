@@ -52,10 +52,15 @@ litert_dynamic_lib(
     }),
     export_litert_only = True,
     features = ["-use_header_modules"],  # Incompatible with -fexceptions.
-    linkopts = litert_android_linkopts() + [
-        "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
-        "-Wl,-lc++abi",
-    ],
+    linkopts = litert_android_linkopts() + select({
+        "@org_tensorflow//tensorflow:android": [
+            "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
+        ],
+        "//conditions:default": [
+            "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
+            "-Wl,-lc++abi",
+        ],
+    }),
     shared_lib_name = "dispatch_api_so",
     so_name = "libLiteRtDispatch_IntelOpenvino.so",
     visibility = ["//litert:__subpackages__"],
