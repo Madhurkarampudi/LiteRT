@@ -154,7 +154,6 @@ build:android_x86 --platforms=@org_tensorflow//tensorflow/tools/toolchains/andro
 build:android_x86_64 --config=android
 build:android_x86_64 --cpu=x86_64
 build:android_x86_64 --fat_apk_cpu=x86_64
-build:android_x86_64 --platforms=@org_tensorflow//tensorflow/tools/toolchains/android:x86_64
 
 # Build everything statically for Android since all static libs are later
 # bundled together into a single .so for deployment.
