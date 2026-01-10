@@ -669,7 +669,9 @@ cc_shared_library(
     additional_linker_inputs = export_lrt_runtime_only_script(),
     shared_lib_name = "libLiteRt.so",
     user_link_flags = export_lrt_runtime_only_linkopt() + select({
-        "@org_tensorflow//tensorflow:android": ["-Wl,-soname=libLiteRt.so"],
+        "@org_tensorflow//tensorflow:android_x86_64": ["-Wl,-soname=libLiteRt.so"],
+        "@org_tensorflow//tensorflow:android_arm64": ["-Wl,-soname=libLiteRt.so"],
+        "@org_tensorflow//tensorflow:linux_x86_64": ["-Wl,-soname=libLiteRt.so"],
         "@platforms//os:macos": ["-Wl,-install_name,@rpath/libLiteRt.so"],
         "//conditions:default": ["-Wl,-soname=libLiteRt.so"],
     }) + litert_android_linkopts(),
