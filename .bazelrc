@@ -259,6 +259,7 @@ build:dynamic_kernels --copt=-DAUTOLOAD_DYNAMIC_KERNELS
 
 # Don't trigger --config=<host platform> when cross-compiling.
 build:android --noenable_platform_specific_config
+build:android --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 build:ios --noenable_platform_specific_config
 
 # Suppress all C++ compiler warnings, otherwise build logs become 10s of MBs.
