@@ -166,15 +166,11 @@ def export_lrt_only_script():
 
 def export_lrt_only_linkopt():
     return select({
-        "@org_tensorflow//tensorflow/tools/toolchains/android:x86_64": [
+        "@org_tensorflow//tensorflow:android": [
             "-Wl,-z,max-page-size=16384",
             _EXPORT_LRT_ONLY_LINKOPT_LINUX,
         ],
-        "@org_tensorflow//tensorflow:android": [ # Generic Android (e.g., other architectures)
-            "-Wl,-z,max-page-size=16384",
-            _EXPORT_LRT_ONLY_LINKOPT_LINUX,
-        ],
-        "@org_tensorflow//tensorflow:linux_x86_64": [_EXPORT_LRT_ONLY_LINKOPT_LINUX], # Linux host, when not Android
+        "@org_tensorflow//tensorflow:linux_x86_64": [_EXPORT_LRT_ONLY_LINKOPT_LINUX],
         "@org_tensorflow//tensorflow:chromiumos": [_EXPORT_LRT_ONLY_LINKOPT_LINUX],
         "@org_tensorflow//tensorflow:macos": [_EXPORT_LRT_ONLY_LINKOPT_DARWIN],
         "@org_tensorflow//tensorflow:ios": [_EXPORT_LRT_ONLY_LINKOPT_DARWIN],
