@@ -56,9 +56,12 @@ litert_dynamic_lib(
         "@org_tensorflow//tensorflow:android": [
             "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
         ],
-        "//conditions:default": [
+        "@org_tensorflow//tensorflow:linux_x86_64": [
             "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
             "-Wl,-lc++abi",
+        ],
+        "//conditions:default": [
+            "-Wl,-soname=libLiteRtDispatch_IntelOpenvino.so",
         ],
     }),
     shared_lib_name = "dispatch_api_so",
