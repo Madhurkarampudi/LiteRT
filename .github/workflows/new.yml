@@ -32,6 +32,10 @@ jobs:
             platforms;android-35
             platform-tools
             cmdline-tools;latest
+      - name: Configure Bazel for Android
+        run: |
+          echo "build --action_env ANDROID_HOME=${ANDROID_HOME}" >> .bazelrc
+          echo "build --action_env ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> .bazelrc
       - name: Accept Android Licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
