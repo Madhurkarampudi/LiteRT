@@ -1,0 +1,65 @@
+name: Build LiteRT Android Artifacts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_android_on_linux:
+    name: Build Android Artifacts on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: >
+            ndk;25.2.9519653
+            build-tools;35.0.1
+            platforms;android-35
+            platform-tools
+            cmdline-tools;latest
+      - name: Accept Android Licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: Set up Bazel
+        uses: bazel-contrib/setup-bazel@0.8.1
+
+      - name: Clean Bazel Cache
+        run: bazel clean --expunge
+
+      - name: Build Android Artifacts with Bazel
+        run: |
+          bazel build -c opt --cxxopt=--std=c++17 --config=android_arm64 \
+            --fat_apk_cpu=x86,x86_64,arm64-v8a,armeabi-v7a \
+            --define=android_dexmerger_tool=d8_dexmerger \
+            --define=android_incremental_dexing_tool=d8_dexbuilder \
+            --repo_env=HERMETIC_PYTHON_VERSION=3.11 \
+            //litert/kotlin:litert_kotlin_api \
+            //tflite/java:tensorflow-lite-api \
+            //tflite/java:tensorflow-lite \
+            //tflite/java:tensorflow-lite-gpu-api \
+            //tflite/java:tensorflow-lite-gpu
+      - name: Upload Android Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-artifacts
+          path: |
+            bazel-bin/litert/kotlin/liblitert_kotlin_api.jar
+            bazel-bin/tflite/java/tensorflow-lite-api.aar
+            bazel-bin/tflite/java/tensorflow-lite.aar
+            bazel-bin/tflite/java/tensorflow-lite-gpu-api.aar
+            bazel-bin/tflite/java/tensorflow-lite-gpu.aar
