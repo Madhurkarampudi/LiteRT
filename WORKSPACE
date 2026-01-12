@@ -6,6 +6,18 @@ workspace(name = "litert")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+load(
+    "@bazel_tools//tools/android:android_sdk_repository.bzl",
+    "android_sdk_repository",
+)
+
+android_sdk_repository(
+    name = "androidsdk",
+    path = "/opt/android/sdk",
+    api_level = 35,
+    build_tools_version = "35.0.1",
+)
+
 http_archive(
     name = "rules_shell",
     sha256 = "bc61ef94facc78e20a645726f64756e5e285a045037c7a61f65af2941f4c25e1",
