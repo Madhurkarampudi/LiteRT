@@ -7,7 +7,7 @@ workspace(name = "litert")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 load(
-    "@bazel_tools//tools/android:android_sdk_repository.bzl",
+    "@bazel_tools//tools/android:android.bzl",
     "android_sdk_repository",
 )
 
