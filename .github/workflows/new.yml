@@ -45,6 +45,12 @@ jobs:
       - name: Clean Bazel Cache
         run: bazel clean --expunge
 
+      - name: Create /opt/android/sdk symlink
+        run: |
+          sudo mkdir -p /opt/android
+          sudo ln -s "$ANDROID_HOME" /opt/android/sdk
+          ls -la /opt/android/sdk
+
       - name: Build Android Artifacts with Bazel
         run: |
           bazel build -c opt --action_env ANDROID_HOME="$ANDROID_HOME" --action_env ANDROID_NDK_HOME="$ANDROID_NDK_HOME" --cxxopt=--std=c++17 --config=android_arm64 \
