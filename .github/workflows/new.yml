@@ -32,6 +32,12 @@ jobs:
             platforms;android-35
             platform-tools
             cmdline-tools;latest
+
+      - name: Export Android NDK env
+        run: |
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+            
       - name: Configure Bazel for Android
         run: |
           echo "build --action_env ANDROID_HOME=${ANDROID_HOME}" >> .bazelrc
