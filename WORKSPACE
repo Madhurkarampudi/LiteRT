@@ -8,14 +8,14 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 android_sdk_repository(
     name = "androidsdk",
-    path = native.getenv("ANDROID_SDK_ROOT") or native.getenv("ANDROID_HOME"),
+    path = "/opt/android/sdk",
     api_level = 35,
     build_tools_version = "35.0.1",
 )
 
 android_ndk_repository(
     name = "androidndk",
-    path = native.getenv("ANDROID_NDK_HOME"),
+    path = "/opt/android/sdk/ndk/25.2.9519653",
     api_level = 35,
 )
 
