@@ -140,7 +140,8 @@ common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-reg
 # target CPU to build transient dependencies correctly. See
 # https://docs.bazel.build/versions/master/user-manual.html#flag--fat_apk_cpu
 build:android --config=clang_local
-build:android --crosstool_top=@androidndk//:toolchain
+build:android --crosstool_top=//external:android/crosstool
+# build:android --crosstool_top=@androidndk//:toolchain
 build:android --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 build:android_arm --config=android
 build:android_arm --cpu=armeabi-v7a
