@@ -32,7 +32,14 @@ jobs:
             platforms;android-35
             platform-tools
             cmdline-tools;latest
-
+            
+      - name: Create stable /opt/android/sdk path
+        run: |
+          sudo mkdir -p /opt/android
+          sudo ln -sf "$ANDROID_HOME" /opt/android/sdk
+          ls -la /opt/android/sdk
+          ls -la /opt/android/sdk/ndk/25.2.9519653
+          
       - name: Export Android NDK env
         run: |
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
