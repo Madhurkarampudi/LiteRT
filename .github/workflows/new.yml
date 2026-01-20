@@ -38,7 +38,7 @@ jobs:
           sudo mkdir -p /opt/android
           sudo ln -sf "$ANDROID_HOME" /opt/android/sdk
           ls -la /opt/android/sdk
-          ls -la /opt/android/sdk/ndk/25.2.9519653
+          ls -la /opt/android/sdk/ndk/21.4.7075529
           
       - name: Export Android NDK env
         run: |
@@ -47,8 +47,8 @@ jobs:
           
       - name: Configure Bazel for Android
         run: |
-          echo "build --action_env ANDROID_HOME=${ANDROID_HOME}" >> .bazelrc
-          echo "build --action_env ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> .bazelrc
+          echo "build --action_env ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529" >> .bazelrc
+          
       - name: Accept Android Licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
@@ -57,13 +57,6 @@ jobs:
 
       - name: Clean Bazel Cache
         run: bazel clean --expunge
-
-      - name: Create stable /opt/android/sdk path
-        run: |
-          sudo mkdir -p /opt/android
-          sudo ln -sf "$ANDROID_HOME" /opt/android/sdk
-          ls -la /opt/android/sdk
-          ls -la /opt/android/sdk/ndk/21.4.7075529
           
       - name: Verify NDK path
         run: |
