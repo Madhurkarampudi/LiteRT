@@ -16,7 +16,7 @@ android_sdk_repository(
 android_ndk_repository(
     name = "androidndk",
     path = "/opt/android/sdk/ndk/21.4.7075529",
-    api_level = 35,
+    api_level = 30,
 )
 
 http_archive(
