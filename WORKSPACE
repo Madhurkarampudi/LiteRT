@@ -19,8 +19,8 @@ load("@bazel_tools//tools/android:android_ndk_repository.bzl", "android_ndk_repo
 
 android_ndk_repository(
     name = "androidndk",
-    path = "/opt/android/sdk/ndk/25.2.9519653",
-    api_level = 35,
+    path = "/opt/android/sdk/ndk/21.4.7075529",
+    api_level = 30,  # keep 30 for NDK r21 compatibility
 )
 
 http_archive(
