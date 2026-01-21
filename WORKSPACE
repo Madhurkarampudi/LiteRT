@@ -13,6 +13,8 @@ android_sdk_repository(
     build_tools_version = "35.0.1",
 )
 
+load("@bazel_tools//tools/android:android_ndk_repository.bzl", "android_ndk_repository")
+
 android_ndk_repository(
     name = "androidndk",
     path = "/opt/android/sdk/ndk/25.2.9519653",
