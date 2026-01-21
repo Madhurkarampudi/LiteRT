@@ -84,7 +84,7 @@ jobs:
         run: bazel clean --expunge
 
       # ------------------------------------------------------------
-      # Build LiteRT + TFLite Android artifacts
+      # Build LiteRT Android artifacts
       # ------------------------------------------------------------
       - name: Build Android Artifacts with Bazel
         run: |
@@ -95,10 +95,6 @@ jobs:
             --config=android_arm64 \
             --define=KLEIDIAI_ENABLE_I8MM=false \
             //litert/kotlin:litert_kotlin_api \
-            //tflite/java:tensorflow-lite-api \
-            //tflite/java:tensorflow-lite \
-            //tflite/java:tensorflow-lite-gpu-api \
-            //tflite/java:tensorflow-lite-gpu
 
       # ------------------------------------------------------------
       # Upload outputs
