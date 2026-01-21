@@ -8,19 +8,12 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 load("@bazel_tools//tools/android:android_sdk_repository.bzl", "android_sdk_repository")
 
-android_sdk_repository(
+aandroid_sdk_repository(
     name = "androidsdk",
-    path = "/opt/android/sdk",
-    api_level = 35,
-    build_tools_version = "35.0.1",
 )
-
-load("@bazel_tools//tools/android:android_ndk_repository.bzl", "android_ndk_repository")
 
 android_ndk_repository(
     name = "androidndk",
-    path = "/opt/android/sdk/ndk/21.4.7075529",
-    api_level = 30,  # r21e is “known” around API 30; higher often warns/falls back
 )
 
 http_archive(
