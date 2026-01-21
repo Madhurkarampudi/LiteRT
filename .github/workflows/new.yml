@@ -38,7 +38,8 @@ jobs:
       - name: Create stable /opt/android/sdk path
         run: |
           sudo mkdir -p /opt/android
-          sudo ln -sfn "$ANDROID_HOME" /opt/android/sdk
+          sudo rm -rf /opt/android/sdk
+          sudo ln -s "$ANDROID_HOME" /opt/android/sdk
           ls -la /opt/android/sdk
           ls -la /opt/android/sdk/ndk/21.4.7075529
 
