@@ -15,7 +15,7 @@ android_sdk_repository(
 
 android_ndk_repository(
     name = "androidndk",
-    path = "/opt/android/sdk/ndk/21.4.7075529",
+    path = "/opt/android/sdk/ndk/26.1.10909125",
     api_level = 30,
 )
 
