@@ -2,104 +2,91 @@ name: Build LiteRT Android Artifacts
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build_android_on_linux:
-    name: Build Android Artifacts on Linux
     runs-on: ubuntu-latest
-
     steps:
-      # ------------------------------------------------------------
-      # Checkout
-      # ------------------------------------------------------------
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # ------------------------------------------------------------
-      # Java (required by Bazel + Android tools)
-      # ------------------------------------------------------------
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      # ------------------------------------------------------------
-      # Android SDK + NDK
-      # ------------------------------------------------------------
-      - name: Set up Android SDK
+      # Install SDK/NDK first
+      - name: Set up Android SDK (NDK r21e)
         uses: android-actions/setup-android@v3
         with:
           packages: >
-            ndk;25.2.9519653
-            build-tools;35.0.1
             platforms;android-35
+            build-tools;35.0.1
             platform-tools
             cmdline-tools;latest
+            ndk;21.4.7075529
 
-      - name: Accept Android Licenses
+      - name: Accept Android licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-      # ------------------------------------------------------------
-      # Export Android environment variables
-      # ------------------------------------------------------------
-      - name: Export Android environment
-        run: |
-          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
-
-      # ------------------------------------------------------------
-      # Create stable SDK path expected by Bazel WORKSPACE
-      # ------------------------------------------------------------
-      - name: Create /opt/android/sdk symlink
+      # Create the path your WORKSPACE hard-codes (/opt/android/sdk)
+      - name: Create stable /opt/android/sdk path
         run: |
           sudo mkdir -p /opt/android
-          sudo ln -sf "$ANDROID_HOME" /opt/android/sdk
+          sudo ln -sfn "$ANDROID_HOME" /opt/android/sdk
           ls -la /opt/android/sdk
-          ls -la /opt/android/sdk/ndk/25.2.9519653
+          ls -la /opt/android/sdk/ndk/21.4.7075529
 
-      - name: Verify Android environment
+      # Export env vars for Bazel + repo rules
+      - name: Export Android env
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
-          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
-          test -d "$ANDROID_NDK_HOME" && echo "NDK OK" || exit 1
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529" >> $GITHUB_ENV
 
-      # ------------------------------------------------------------
-      # Bazel
-      # ------------------------------------------------------------
-      - name: Set up Bazel
+      # Pin Bazel (important for android_ndk_repository.bzl availability)
+      - name: Set up Bazel (pinned)
         uses: bazel-contrib/setup-bazel@0.8.1
+        with:
+          bazel-version: "7.4.1"
 
-      - name: Show Bazel version
-        run: bazel --version
+      - name: Print Bazel version
+        run: bazel version
 
       - name: Clean Bazel cache
         run: bazel clean --expunge
 
-      # ------------------------------------------------------------
-      # Build LiteRT Android artifacts
-      # ------------------------------------------------------------
-      - name: Build Android Artifacts with Bazel
+      # Prefer .bazelrc.user over appending to .bazelrc in CI
+      - name: Write .bazelrc.user (CI overrides)
+        run: |
+          cat > .bazelrc.user << 'EOF'
+          build --action_env=ANDROID_HOME
+          build --action_env=ANDROID_SDK_ROOT
+          build --action_env=ANDROID_NDK_HOME
+          # If your repo expects this, keep it:
+          build --android_sdk=@androidsdk//:sdk
+          EOF
+
+      - name: Verify NDK path
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
+          test -d "$ANDROID_NDK_HOME" && echo "NDK OK" || (echo "NDK missing" && exit 1)
+
+      # Build the artifacts you listed
+      - name: Build Android artifacts
         run: |
           bazel build -c opt \
-            --action_env=ANDROID_HOME="$ANDROID_HOME" \
-            --action_env=ANDROID_NDK_HOME="$ANDROID_NDK_HOME" \
-            --cxxopt=-std=c++17 \
             --config=android_arm64 \
+            --cxxopt=-std=c++17 \
             --define=KLEIDIAI_ENABLE_I8MM=false \
             //litert/kotlin:litert_kotlin_api \
 
-      # ------------------------------------------------------------
-      # Upload outputs
-      # ------------------------------------------------------------
-      - name: Upload Android Artifacts
+      - name: Upload Android artifacts
         uses: actions/upload-artifact@v4
         with:
           name: android-artifacts
