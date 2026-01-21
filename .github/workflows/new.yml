@@ -53,7 +53,7 @@ jobs:
       - name: Set up Bazel (pinned)
         uses: bazel-contrib/setup-bazel@0.8.1
         with:
-          bazel-version: "7.4.1"
+          bazelisk-version: "7.4.1"
 
       - name: Print Bazel version
         run: bazel version
