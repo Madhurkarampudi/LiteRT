@@ -66,15 +66,17 @@ jobs:
       
       - name: Build Android Artifacts with Bazel
         run: |
-          bazel build -c opt --action_env ANDROID_HOME="$ANDROID_HOME" --action_env ANDROID_NDK_HOME="$ANDROID_NDK_HOME" --cxxopt=-std=c++17 --config=android_arm64 \
-            --define=android_dexmerger_tool=d8_dexmerger \
-            --define=android_incremental_dexing_tool=d8_dexbuilder \
-            --repo_env=HERMETIC_PYTHON_VERSION=3.11 \
-            //litert/kotlin:litert_kotlin_api \
-            //tflite/java:tensorflow-lite-api \
-            //tflite/java:tensorflow-lite \
-            //tflite/java:tensorflow-lite-gpu-api \
-            //tflite/java:tensorflow-lite-gpu
+          bazel build -c opt \
+          --action_env ANDROID_HOME="$ANDROID_HOME" \
+          --action_env ANDROID_NDK_HOME="$ANDROID_NDK_HOME" \
+          --cxxopt=-std=c++17 \
+          --config=android_arm64 \
+          --define=KLEIDIAI_ENABLE_I8MM=false \
+          //litert/kotlin:litert_kotlin_api \
+          //tflite/java:tensorflow-lite-api \
+          //tflite/java:tensorflow-lite \
+          //tflite/java:tensorflow-lite-gpu-api \
+          //tflite/java:tensorflow-lite-gpu
             
       - name: Upload Android Artifacts
         uses: actions/upload-artifact@v4
