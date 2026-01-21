@@ -20,62 +20,38 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Pin Bazel version
-        run: |
-          echo "7.4.1" > .bazelversion
-          cat .bazelversion
-
-      # Install SDK/NDK
-      - name: Set up Android SDK (NDK r21e)
+      - name: Set up Android SDK + NDK (r25.2)
         uses: android-actions/setup-android@v3
         with:
           packages: >
+            platform-tools
             platforms;android-35
             build-tools;35.0.1
-            platform-tools
             cmdline-tools;latest
-            ndk;21.4.7075529
+            ndk;25.2.9519653
 
       - name: Accept Android licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-      # WORKSPACE hard-codes /opt/android/sdk so create that
-      - name: Create stable /opt/android/sdk path
+      - name: Create /opt/android/sdk symlink (repo expects this)
         run: |
           sudo mkdir -p /opt/android
           sudo ln -sfn "$ANDROID_HOME" /opt/android/sdk
           ls -la /opt/android/sdk
-          ls -la /opt/android/sdk/ndk/21.4.7075529
+          ls -la /opt/android/sdk/ndk/25.2.9519653
 
       - name: Export Android env
         run: |
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      # ✅ Setup Bazelisk (it will read .bazelversion)
-      - name: Set up Bazel (Bazelisk)
+      - name: Set up Bazel
         uses: bazel-contrib/setup-bazel@0.8.1
         with:
-          bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
+          bazel-version: "7.4.1"
 
       - name: Print Bazel version
-        run: |
-          bazel --version
-          bazel version
-
-      - name: Clean Bazel cache
-        run: bazel clean --expunge
-
-      # Optional: avoid editing repo .bazelrc; use .bazelrc.user
-      - name: Write .bazelrc.user (CI overrides)
-        run: |
-          cat > .bazelrc.user << 'EOF'
-          build --action_env=ANDROID_HOME
-          build --action_env=ANDROID_SDK_ROOT
-          build --action_env=ANDROID_NDK_HOME
-          EOF
+        run: bazel version
 
       - name: Verify NDK path
         run: |
@@ -83,11 +59,13 @@ jobs:
           echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
           test -d "$ANDROID_NDK_HOME" && echo "NDK OK" || (echo "NDK missing" && exit 1)
 
+      - name: Clean Bazel cache
+        run: bazel clean --expunge
+
       - name: Build Android artifacts
         run: |
           bazel build -c opt \
             --config=android_arm64 \
-            --cxxopt=-std=c++17 \
             --define=KLEIDIAI_ENABLE_I8MM=false \
             //litert/kotlin:litert_kotlin_api \
             //tflite/java:tensorflow-lite-api \
