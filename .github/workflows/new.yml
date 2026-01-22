@@ -78,7 +78,7 @@ jobs:
       
       - name: Build Android Artifacts with Bazel
         run: |
-         bazel build --announce_rc --config=android_arm64 //litert/kotlin:litert_kotlin_api
+         bazel build --extra_toolchains=@bazel_tools//tools/jdk:all --config=android_arm64 //litert/kotlin:litert_kotlin_api
             
       - name: Upload Android Artifacts
         uses: actions/upload-artifact@v4
