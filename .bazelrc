@@ -41,7 +41,11 @@
 # Default build options. These are applied first and unconditionally.
 
 build --incompatible_enable_cc_toolchain_resolution
-build --repo_env USE_HERMETIC_CC_TOOLCHAIN=1
+# build --repo_env USE_HERMETIC_CC_TOOLCHAIN=1
+build:android --repo_env USE_HERMETIC_CC_TOOLCHAIN=0
+
+# Android SDK repository registered in WORKSPACE as name = "androidsdk"
+build --android_sdk=@androidsdk//:sdk
 
 # TODO: Migrate for https://github.com/bazelbuild/bazel/issues/7260
 build:clang_local --noincompatible_enable_cc_toolchain_resolution
@@ -101,6 +105,10 @@ build --define=grpc_no_ares=true
 build --noincompatible_remove_legacy_whole_archive
 build --features=-force_no_whole_archive
 build --host_features=-force_no_whole_archive
+build --java_language_version=17
+build --tool_java_language_version=17
+build --java_runtime_version=local_jdk_17
+build --tool_java_runtime_version=local_jdk_17
 
 # TODO(mihaimaruseac): Document this option or remove if no longer needed
 build --enable_platform_specific_config
@@ -136,9 +144,16 @@ common --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-reg
 # Android configs. Bazel needs to have --cpu and --fat_apk_cpu both set to the
 # target CPU to build transient dependencies correctly. See
 # https://docs.bazel.build/versions/master/user-manual.html#flag--fat_apk_cpu
-build:android --config=clang_local
-build:android --crosstool_top=//external:android/crosstool
-build:android --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:android --config=clang_local
+# build:android --crosstool_top=@androidndk//:toolchain
+# build:android --copt=--sysroot=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+# build:android --cxxopt=--sysroot=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+# build:android --linkopt=--sysroot=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+# build:android --crosstool_top=//external:android/crosstool
+# build:android --crosstool_top=@androidndk//:toolchain
+# build:android --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:android --java_runtime_version=local_jdk
+build:android --tool_java_runtime_version=local_jdk
 build:android_arm --config=android
 build:android_arm --cpu=armeabi-v7a
 build:android_arm --fat_apk_cpu=armeabi-v7a
@@ -146,7 +161,8 @@ build:android_arm --platforms=@org_tensorflow//tensorflow/tools/toolchains/andro
 build:android_arm64 --config=android
 build:android_arm64 --cpu=arm64-v8a
 build:android_arm64 --fat_apk_cpu=arm64-v8a
-build:android_arm64 --platforms=@org_tensorflow//tensorflow/tools/toolchains/android:arm64-v8a
+# build:android_arm64 --platforms=@org_tensorflow//tensorflow/tools/toolchains/android:arm64-v8a
+build:android_arm64 --platforms=//litert/tools/platforms:android_arm64
 build:android_x86 --config=android
 build:android_x86 --cpu=x86
 build:android_x86 --fat_apk_cpu=x86
