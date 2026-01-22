@@ -13,11 +13,13 @@ android_sdk_repository(
     build_tools_version = "35.0.1",
 )
 
-# android_ndk_repository(
-#    name = "androidndk",
-#    path = "/opt/android/sdk/ndk/26.1.10909125",
-#    api_level = 30,
-# )
+android_ndk_repository(
+    name = "androidndk",
+    path = "/opt/android/sdk/ndk/26.1.10909125",
+    api_level = 30,
+)
+
+register_toolchains("@androidndk//:all")
 
 http_archive(
     name = "rules_shell",
