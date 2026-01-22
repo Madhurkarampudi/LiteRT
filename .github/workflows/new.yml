@@ -71,6 +71,10 @@ jobs:
           "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" \
           -target aarch64-linux-android30 -march=armv8.2-a+bf16+dotprod \
           -c /tmp/t.c -o /tmp/t.o
+
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
+          javac -version
       
       - name: Build Android Artifacts with Bazel
         run: |
