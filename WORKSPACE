@@ -6,18 +6,18 @@ workspace(name = "litert")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-android_sdk_repository(
-    name = "androidsdk",
-    path = "/opt/android/sdk",
-    api_level = 35,
-    build_tools_version = "35.0.1",
-)
+# android_sdk_repository(
+#    name = "androidsdk",
+#    path = "/opt/android/sdk",
+#    api_level = 35,
+#    build_tools_version = "35.0.1",
+# )
 
-android_ndk_repository(
-    name = "androidndk",
-    path = "/opt/android/sdk/ndk/26.1.10909125",
-    api_level = 30,
-)
+# android_ndk_repository(
+#    name = "androidndk",
+#    path = "/opt/android/sdk/ndk/26.1.10909125",
+#    api_level = 30,
+# )
 
 http_archive(
     name = "rules_shell",
