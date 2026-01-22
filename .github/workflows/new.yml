@@ -75,8 +75,6 @@ jobs:
       - name: Build Android Artifacts with Bazel
         run: |
           bazel build --config=android_arm64 \
-            --android_sdk=$ANDROID_HOME \
-            --android_ndk_home=$ANDROID_NDK_HOME \
             //litert/kotlin:litert_kotlin_api
             
       - name: Upload Android Artifacts
